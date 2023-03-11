@@ -1,0 +1,11 @@
+.changeAddr {
+    display: flex;
+    flex-direction: row;
+    width: 600px;
+    padding: 5px;
+}
+
+.btn {
+    left: 5px;
+    width: 100px;
+}

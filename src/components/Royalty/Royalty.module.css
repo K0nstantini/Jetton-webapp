@@ -1,0 +1,19 @@
+.royalty {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 600px;
+    padding: 5px;
+    align-items: center;
+}
+
+.btn {
+    left: 5px;
+    width: 100px;
+}
+
+.txt {
+    text-align: start;
+    color: black;
+    width: 595px;
+}
