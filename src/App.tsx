@@ -9,18 +9,19 @@ import { Address, OpenedContract } from 'ton-core';
 import Minter from './contracts/minter';
 import { ModalText } from './components/ModalText';
 import { ModalNumber } from './components/ModalNumber';
-import { ChangeAddress } from './components/ChangeAddress/ChangeAddress';
+import { ChangeAddress } from './components/changeAddress/ChangeAddress';
 import { MyAlert } from './components/MyAlert';
-import { Royalty } from './components/Royalty/Royalty';
+import { Royalty } from './components/royalty/Royalty';
+import { Supply } from './components/supply/Supply';
+import { MinterBox } from './components/minter/Minter';
 
 function App() {
   const { sender, connected } = useTonConnect();
 
   const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
   const client = useTonClient();
-  const [jettonAmount, setJettonAmount] = useState<null | bigint>();
   const [royalty, setRoyalty] = useState<null | number>();
-
+  const [supply, setSupply] = useState<null | bigint>();
 
   const [refreshMinter, setRefreshMinter] = useState(false);
   const [enabledMinter, setEnabledMinter] = useState(false);
@@ -63,11 +64,11 @@ function App() {
   useEffect(() => {
     async function getData() {
       if (!minterContract) return;
-      setJettonAmount(null);
-      const { jettonAmount, adminAddr } = await minterContract.getData();
-      setJettonAmount(jettonAmount);
-      setAdminAddr(adminAddr.toString());
+      setSupply(null);
       setRoyalty(null);
+      const { jettonAmount, adminAddr } = await minterContract.getData();
+      setSupply(jettonAmount);
+      setAdminAddr(adminAddr.toString());
       const royalty = await minterContract.getRoyalty();
       setRoyalty(royalty);
     }
@@ -79,7 +80,7 @@ function App() {
       if (!minterContract || !newAdminAddr || adminAddr == newAdminAddr) return;
       const addr = Address.parse(newAdminAddr);
       await minterContract.sendChangeAdmin(sender, addr);
-      await sleep(10000);
+      await sleep(20000);
       setRefreshMinter(!refreshMinter);
     }
     changeAdminAddr();
@@ -88,9 +89,8 @@ function App() {
   useEffect(() => {
     async function changeRoyalty() {
       if (!minterContract || !newRoyalty || royalty == newRoyalty) return;
-      // console.log(`${new Date().toLocaleTimeString()}: Start set royalty`);
       await minterContract.sendSetRoyalty(sender, newRoyalty);
-      await sleep(10000);
+      await sleep(20000);
       setRefreshMinter(!refreshMinter);
     }
     changeRoyalty();
@@ -101,26 +101,20 @@ function App() {
   const [openAdminAddr, setOpenAdminAddr] = useState(false);
   const [openRoyalty, setOpenRoyalty] = useState(false);
 
-  // const [openWarning, setOpenWarning] = useState({ open: false, message: '' });
 
-  // const onClickAdminAddrChange = () => {
-  //   if (!minterAddr) {
-  //     setOpenWarning({ open: true, message: "Minter contract not selected" })
-  //     return;
-  //   } else if (!connected) {
-  //     setOpenWarning({ open: true, message: "Wallet not connected" })
-  //     return;
-  //   } else {
-  //     setOpenAdminAddr(true);
-  //   }
-  // }
+  const minterChange = (addr: Address) => {
+    console.log(addr);
+  }
+
 
   return (
     <div className='App'>
       <div className='Container'>
         <TonConnectButton />
 
-        <div className='Minter'>
+        <MinterBox sender={sender} minterChange={minterChange} />
+
+        {/* <div className='Minter'>
           <b>Minter</b>
           <ChangeAddress
             value={minterContract ? minterContract?.address.toString() : ""}
@@ -139,20 +133,8 @@ function App() {
             btnEnabled={minterContract ? true : false}
             onClick={() => setOpenRoyalty(true)} />
 
+          <Supply value={supply ? supply : null} />
 
-          {/* <div className='Royalty'>
-            <h3>{`Comission: ${royalty}%`}</h3>
-            <Button
-              variant="contained"
-              disabled={!enabledMinter}
-              onClick={() => setOpenRoyalty(true)}>
-              change
-            </Button>
-          </div> */}
-
-          <div className='JettonAmount'>
-            <h3>{`Jetton amount: ${jettonAmount}`}</h3>
-          </div>
         </div>
 
         <ModalText
@@ -171,7 +153,7 @@ function App() {
           open={openRoyalty}
           handleClose={() => setOpenRoyalty(false)}
           onClickBtn={royaltyChange}
-        />
+        /> */}
 
         {/* <MyAlert
           open={openWarning.open}
@@ -185,32 +167,6 @@ function App() {
           handleClose={() => setOpenWarning(false)}
         /> */}
 
-
-        {/* <Snackbar
-          open={openWarning}
-          autoHideDuration={6000}
-          onClose={() => setOpenWarning(false)}>
-          <Alert
-            onClose={() => setOpenWarning(false)}
-            severity="warning"
-            sx={{ width: '100%' }}>
-            Not connected
-          </Alert>
-        </Snackbar> */}
-
-        {/* <Snackbar
-          open={openWarning}
-          autoHideDuration={6000}
-          onClose={() => setOpenWarning(false)}
-          message="Not connected"
-          action={action}
-        /> */}
-
-        {/* <Collapse in={openWarning}>
-          <Alert severity="warning">
-            This is a warning alert — check it out!
-          </Alert>
-        </Collapse> */}
 
       </div>
     </div >

@@ -10,12 +10,15 @@ type RoyaltyProps = {
 export function Royalty({ value, btnEnabled, onClick }: RoyaltyProps) {
 
     const valueStr = value ? `${value}%` : 'not available...';
+    const color = value ?
+        value > 0 ? 'green' : (value < 0 ? 'red' : 'black')
+        : 'grey';
 
     return (
         <div className={classes.royalty} >
             <div className={classes.txt}>
-                <h3 className={classes.txt}>
-                    {`Comission: ${valueStr}`}
+                <h3 style={{ width: '110px' }}>Comission:</h3>
+                <h3 style={{ color }}> {valueStr}
                 </h3>
             </div>
             <Button
@@ -25,7 +28,7 @@ export function Royalty({ value, btnEnabled, onClick }: RoyaltyProps) {
                 onClick={onClick}>
                 change
             </Button>
-        </div>
+        </div >
 
     )
 }
