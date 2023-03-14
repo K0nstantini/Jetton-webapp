@@ -1,4 +1,5 @@
-import { Contract, ContractProvider, Sender, Address, Cell, beginCell } from "ton-core";
+import { Contract, ContractProvider, Sender, Address, Cell, beginCell, parseTuple } from "ton-core";
+import { TupleItemSlice } from "ton-core/dist/tuple/tuple";
 
 export default class Minter implements Contract {
 
@@ -77,6 +78,16 @@ export default class Minter implements Contract {
       jettonAmount,
       adminAddr
     };
+  }
+
+  async getWalletAddress(provider: ContractProvider, address: Address) {
+    const param = {
+      type: 'slice',
+      cell: beginCell().storeAddress(address).endCell()
+    } as TupleItemSlice;
+    const { stack } = await provider.get("get_wallet_address", [param]);
+    console.log(stack);
+    return stack.readAddress();
   }
 
 }

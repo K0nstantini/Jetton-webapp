@@ -1,0 +1,38 @@
+.actions {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    max-width: fit-content;
+}
+
+.fields {
+    padding: 10px;
+    left: 5px;
+    display: flex;
+    flex-direction: row;
+    width: fit-content
+}
+
+.addr {
+    width: 500px;
+}
+
+.size {
+    left: 5px;
+    width: 90px;
+}
+
+.btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    padding-right: 15px;
+}
+
+.mint {
+    left: 5px;
+}
+
+.send {
+    left: 10px;
+}

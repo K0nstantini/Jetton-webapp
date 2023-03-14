@@ -1,20 +1,19 @@
-.royalty {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 600px;
-    padding: 5px;
-    align-items: center;
+:root {
+    --blue-color: rgb(25, 118, 210);
 }
 
-.btn {
-    left: 5px;
-    width: 100px;
+.minter {
+    padding: 10px;
+    padding-right: 15px;
+    background-color: lightgray;
+    border: 3px solid var(--blue-color);
+    border-radius: 25px;
+    max-width: fit-content;
+    display: flex;
+    flex-direction: column;
 }
 
-.txt {
-    display: flex;
-    flex-direction: row;
-    text-align: start;
-    width: 595px;
+.label {
+    padding: 10px;
+    color: var(--blue-color);
 }
