@@ -16,10 +16,9 @@ export function Royalty({ value, btnEnabled, onClick }: RoyaltyProps) {
 
     return (
         <div className={classes.royalty} >
-            <div className={classes.txt}>
-                <h3 style={{ width: '110px' }}>Comission:</h3>
-                <h3 style={{ color }}> {valueStr}
-                </h3>
+            <div className={classes.txtBox}>
+                <h3 className={classes.staticTxt}>Comission:</h3>
+                <h3 style={{ color }}> {valueStr}</h3>
             </div>
             <Button
                 className={classes.btn}

@@ -1,38 +1,29 @@
 .actions {
-    padding: 10px;
     display: flex;
     flex-direction: column;
-    max-width: fit-content;
+    gap: 5px;
+    width: 650px;
 }
 
 .fields {
-    padding: 10px;
-    left: 5px;
     display: flex;
     flex-direction: row;
-    width: fit-content
+    gap: 10px;
+    padding-left: 12px;
 }
 
 .addr {
-    width: 500px;
+    width: 520px;
 }
 
 .size {
-    left: 5px;
-    width: 90px;
+    width: 100px
 }
 
 .btns {
     display: flex;
     flex-direction: row;
     justify-content: end;
-    padding-right: 15px;
-}
-
-.mint {
-    left: 5px;
-}
-
-.send {
-    left: 10px;
+    padding-right: 7px;
+    gap: 5px;
 }

@@ -38,6 +38,9 @@ export default class Wallet implements Contract {
 
   async getData(provider: ContractProvider) {
     const { stack } = await provider.get("get_wallet_data", []);
-    return [stack.readBigNumber(), stack.readAddress()];
+    return {
+      jettonAmount: stack.readBigNumber(),
+      address: stack.readAddress()
+    };
   }
 }

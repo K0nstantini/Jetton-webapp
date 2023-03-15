@@ -1,114 +1,25 @@
-:root {
-  --tg-theme-bg-color: #efeff3;
-  --tg-theme-button-color: #63d0f9;
-  --tg-theme-button-text-color: black;
+body {
+  background-color: #f1f1f1;
 }
 
 /* .App {
-  height: 100vh;
-  background-color: var(--tg-theme-bg-color);
-  color: var(--tg-theme-text-color);
-}
+  width: 100%;
+} */
 
 .Container {
-  padding: 2rem;
-  max-width: 500px;
   display: flex;
   flex-direction: column;
   gap: 30px;
+  width: 100%;
   align-items: center;
-  margin: 0 auto;
-  text-align: center;
-} */
+}
 
 .Connect {
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-}
-
-.Button {
-  background-color: var(--tg-theme-button-color);
-  color: var(--tg-theme-button-text-color);
-  display: inline-block;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  width: 100%;
-}
-
-.Disabled {
-  filter: brightness(50%);
-  cursor: initial;
-}
-
-.Button.Active:hover {
-  filter: brightness(105%);
-}
-
-.Hint {
-  color: var(--tg-theme-hint-color);
-}
-
-.Card {
-  width: 100%;
-  padding: 10px 20px;
-  border-radius: 10px;
-  background-color: white;
-}
-
-.Minter {
-  max-width: 700px;
-  padding: 10px;
-  background-color: #D9D9D9;
-}
-
-.MinterAddress {
-  display: flex;
-  flex-direction: row;
-  width: 600px;
-}
-
-.MinterAdminAddr {
-  display: flex;
-  flex-direction: row;
-  width: 600px;
+  float: right;
 }
 
 
-.Royalty {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 600px;
-}
-
-.JettonAmount {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 600px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --tg-theme-bg-color: #131415;
-    --tg-theme-text-color: #fff;
-    --tg-theme-button-color: #32a6fb;
-    --tg-theme-button-text-color: #fff;
-  }
-
-  .Card {
-    background-color: var(--tg-theme-bg-color);
-    filter: brightness(165%);
-  }
-
-  .JettonValue {
-    border-radius: 16px;
-    color: white;
-    padding: 10px;
-  }
-
+.Header {
+  color: darkblue;
+  text-shadow: 2px 2px 4px rgba(179, 147, 211, 0.2);
 }

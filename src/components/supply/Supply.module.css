@@ -1,6 +1,9 @@
 .supply {
     display: flex;
     flex-direction: row;
-    padding: 5px;
-    text-align: start;
+}
+
+.staticTxt {
+    width: 120px;
+    text-align: left;
 }

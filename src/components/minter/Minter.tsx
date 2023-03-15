@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Address, openContract, OpenedContract, Sender } from 'ton-core';
+import { Address, OpenedContract, Sender } from 'ton-core';
 import Minter from '../../contracts/minter';
 import { useAsyncInitialize } from '../../hooks/useAsyncInitialize';
 import { useTonClient } from '../../hooks/useTonClient';
@@ -117,7 +117,9 @@ export function MinterBox({ sender, refresh: outerRefresh, minterChange }: Minte
                 btnEnabled={minterContract ? true : false}
                 onClick={() => setOpenRoyalty(true)} />
 
-            <Supply value={supply ? supply : null} />
+            <Supply
+                label='Supply:'
+                value={supply ? supply : null} />
 
             <ModalText
                 open={openMintAddr}
@@ -136,11 +138,6 @@ export function MinterBox({ sender, refresh: outerRefresh, minterChange }: Minte
                 handleClose={() => setOpenRoyalty(false)}
                 onClickBtn={royaltyChange}
             />
-
-
         </div>
-
-
-
     )
 }

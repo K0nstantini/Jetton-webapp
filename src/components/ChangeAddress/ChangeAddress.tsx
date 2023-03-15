@@ -8,16 +8,14 @@ type ChangeAddressProps = {
     onClick: () => void
 }
 
-
 export function ChangeAddress({ value, label, btnEnabled, onClick }: ChangeAddressProps) {
 
     return (
         <div className={classes.changeAddr} >
             <TextField
-                id="outlined-basic"
+                className={classes.field}
                 variant="outlined"
                 label={label}
-                fullWidth={true}
                 inputProps={{ readOnly: true }}
                 value={value}
             />

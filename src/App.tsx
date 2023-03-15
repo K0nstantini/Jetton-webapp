@@ -6,12 +6,13 @@ import { OpenedContract } from 'ton-core';
 import { MinterBox } from './components/minter/Minter';
 import { JettonAction } from './components/jettonActions/JettonActions';
 import Minter from './contracts/minter';
+import { WalletBox } from './components/wallet/Wallet';
 
 function App() {
   const { sender } = useTonConnect();
 
   const [minter, setMinter] = useState<OpenedContract<Minter>>();
-  const [refreshMinter, setRefreshMinter] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
 
   const minterChange = (contract: OpenedContract<Minter>) => {
@@ -20,18 +21,21 @@ function App() {
 
   return (
     <div className='App'>
+      <h1 className='Header'>Jetton playground</h1>
+      <TonConnectButton className='Connect' />
       <div className='Container'>
-        <div className='Connect'>
-          <TonConnectButton />
-        </div>
         <JettonAction
           sender={sender}
           minter={minter ? minter : null}
-          refresh={() => setRefreshMinter(!refreshMinter)} />
+          refresh={() => setRefresh(!refresh)} />
         <MinterBox
           sender={sender}
-          refresh={refreshMinter}
+          refresh={refresh}
           minterChange={minterChange} />
+        <WalletBox
+          sender={sender}
+          minter={minter ? minter : null}
+          refresh={refresh} />
       </div>
     </div >
   );

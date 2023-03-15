@@ -2,7 +2,7 @@
     --blue-color: rgb(25, 118, 210);
 }
 
-.minter {
+.wallet {
     background-color: lightgray;
     border: 2px solid var(--blue-color);
     border-radius: 25px;
@@ -16,4 +16,8 @@
 .label {
     padding: 10px;
     color: var(--blue-color);
+}
+
+.jettonAddr {
+    width: 520px;
 }

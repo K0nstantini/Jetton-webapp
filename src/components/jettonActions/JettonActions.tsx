@@ -57,7 +57,7 @@ export function JettonAction({ sender, minter, refresh }: JettonActionsProps) {
     }
 
     const jettonWallet = useAsyncInitialize(async () => {
-        if (!client || !minter || !walletAddr) return;
+        if (!(client && minter && walletAddr)) return;
         const jettonAddr = await minter.getWalletAddress(walletAddr);
         const contract = new Wallet(jettonAddr);
         return client.open(contract) as OpenedContract<Wallet>;
@@ -68,7 +68,6 @@ export function JettonAction({ sender, minter, refresh }: JettonActionsProps) {
             <div className={classes.fields}>
                 <TextField
                     className={classes.addr}
-                    id="outlined-basic"
                     label="Address"
                     variant="outlined"
                     value={addr}
@@ -76,7 +75,6 @@ export function JettonAction({ sender, minter, refresh }: JettonActionsProps) {
                 />
                 <TextField
                     className={classes.size}
-                    id="outlined-basic"
                     type={'number'}
                     label="Size"
                     variant="outlined"
@@ -87,7 +85,6 @@ export function JettonAction({ sender, minter, refresh }: JettonActionsProps) {
 
             <div className={classes.btns}>
                 <Button
-                    className={classes.burn}
                     sx={{ backgroundColor: 'red' }}
                     disabled={disabled}
                     variant="contained"
@@ -95,7 +92,6 @@ export function JettonAction({ sender, minter, refresh }: JettonActionsProps) {
                     burn
                 </Button>
                 <Button
-                    className={classes.mint}
                     sx={{ backgroundColor: 'green' }}
                     disabled={disabled}
                     variant="contained"
@@ -103,7 +99,6 @@ export function JettonAction({ sender, minter, refresh }: JettonActionsProps) {
                     mint
                 </Button>
                 <Button
-                    className={classes.send}
                     sx={{ backgroundColor: '#B88251' }}
                     disabled={disabled}
                     variant="contained"

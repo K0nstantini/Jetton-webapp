@@ -1,20 +1,21 @@
 .royalty {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    width: 600px;
-    padding: 5px;
     align-items: center;
 }
 
-.btn {
-    left: 5px;
-    width: 100px;
-}
-
-.txt {
+.txtBox {
     display: flex;
     flex-direction: row;
-    text-align: start;
-    width: 595px;
+    width: 520px;
+}
+
+.staticTxt {
+    width: 120px;
+    text-align: left;
+}
+
+.btn {
+    width: 100px;
+    left: 10px;
 }
