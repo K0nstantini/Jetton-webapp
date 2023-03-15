@@ -1,9 +1,7 @@
-import { TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Address, OpenedContract, Sender } from 'ton-core';
 import Minter from '../../contracts/minter';
 import Wallet from '../../contracts/wallet';
-import { useAsyncInitialize } from '../../hooks/useAsyncInitialize';
 import { useTonClient } from '../../hooks/useTonClient';
 import { ChangeAddress } from '../changeAddress/ChangeAddress';
 import { ModalText } from '../ModalText';
@@ -20,11 +18,14 @@ export function WalletBox({ sender, minter, refresh }: WalletProps) {
 
     const client = useTonClient();
 
-    const [ownerAddr, setOwnerAddr] = useState<Address>();
-    const [jettonAddr, setJettonAddr] = useState<null | Address>();
+    const [ownerAddr, setOwnerAddr] = useState<Address | null>();
+    const [jettonAddr, setJettonAddr] = useState<Address | null>();
     const [jettons, setJettons] = useState<null | bigint>();
 
+    const [jettonWallet, setJettonWallet] = useState<OpenedContract<Wallet>>();
+
     const [openOwnerAddr, setOpenOwnerAddr] = useState(false);
+    const [openJettonAddr, setOpenJettonAddr] = useState(false);
 
     const ownerAddrChange = (addr: string) => {
         setOpenOwnerAddr(false);
@@ -33,24 +34,47 @@ export function WalletBox({ sender, minter, refresh }: WalletProps) {
         } catch { }
     }
 
-    const jettonWallet = useAsyncInitialize(async () => {
-        if (!(client && minter && ownerAddr)) return;
-        setJettonAddr(null);
-        const jettonAddr = await minter.getWalletAddress(ownerAddr);
-        setJettonAddr(jettonAddr);
+    const ownerJettonChange = (addr: string) => {
+        setOpenJettonAddr(false);
+        try {
+            setJettonAddr(Address.parse(addr));
+        } catch { }
+    }
+
+    useEffect(() => {
+        if (!(client && jettonAddr)) return;
         const contract = new Wallet(jettonAddr);
-        return client.open(contract) as OpenedContract<Wallet>;
-    }, [ownerAddr])
+        const openedContract = client.open(contract) as OpenedContract<Wallet>;
+        setJettonWallet(openedContract);
+    }, [jettonAddr]);
 
     useEffect(() => {
         async function getData() {
             if (!jettonWallet) return;
             setJettons(null);
-            const { jettonAmount, address } = await jettonWallet.getData();
-            setJettons(jettonAmount);
+            try {
+                const { jettonAmount, address } = await jettonWallet.getData();
+                setJettons(jettonAmount);
+                if (ownerAddr?.toString() != address.toString()) setOwnerAddr(address);
+            } catch {
+                setOwnerAddr(null);
+            }
         }
         getData();
     }, [jettonWallet, refresh]);
+
+    useEffect(() => {
+        async function getJettonAddr() {
+            if (!(client && minter && ownerAddr)) return;
+            try {
+                const address = await minter.getWalletAddress(ownerAddr);
+                if (jettonAddr?.toString() != address.toString()) setJettonAddr(address);
+            } catch {
+                setJettonAddr(null);
+            }
+        }
+        getJettonAddr();
+    }, [ownerAddr]);
 
     return (
         <div className={classes.wallet}>
@@ -61,12 +85,11 @@ export function WalletBox({ sender, minter, refresh }: WalletProps) {
                 btnEnabled={minter ? true : false}
                 onClick={() => setOpenOwnerAddr(true)} />
 
-            <TextField
-                className={classes.jettonAddr}
-                variant="outlined"
-                label='Jetton address'
-                inputProps={{ readOnly: true }}
-                value={jettonAddr ? jettonAddr.toString() : ''} />
+            <ChangeAddress
+                value={jettonAddr ? jettonAddr.toString() : ''}
+                label="Jetton address"
+                btnEnabled={true}
+                onClick={() => setOpenJettonAddr(true)} />
 
             <Supply
                 label='Jettons:'
@@ -75,8 +98,12 @@ export function WalletBox({ sender, minter, refresh }: WalletProps) {
             <ModalText
                 open={openOwnerAddr}
                 handleClose={() => setOpenOwnerAddr(false)}
-                onClickBtn={ownerAddrChange}
-            />
+                onClickBtn={ownerAddrChange} />
+
+            <ModalText
+                open={openJettonAddr}
+                handleClose={() => setOpenJettonAddr(false)}
+                onClickBtn={ownerJettonChange} />
         </div>
 
     )

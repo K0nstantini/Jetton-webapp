@@ -2,10 +2,6 @@ body {
   background-color: #f1f1f1;
 }
 
-/* .App {
-  width: 100%;
-} */
-
 .Container {
   display: flex;
   flex-direction: column;
@@ -15,11 +11,19 @@ body {
 }
 
 .Connect {
-  float: right;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  padding-right: 100px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
 }
 
 
 .Header {
   color: darkblue;
   text-shadow: 2px 2px 4px rgba(179, 147, 211, 0.2);
+  padding-bottom: 50px;
 }

@@ -54,9 +54,7 @@ export function MinterBox({ sender, refresh: outerRefresh, minterChange }: Minte
 
     const minterContract = useAsyncInitialize(async () => {
         if (!client) return;
-        const contract = new Minter(
-            Address.parse(minterAddr)
-        );
+        const contract = new Minter(Address.parse(minterAddr));
         const openedContract = client.open(contract) as OpenedContract<Minter>;
         minterChange(openedContract);
         return openedContract;

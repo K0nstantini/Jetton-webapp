@@ -9,7 +9,7 @@ type RoyaltyProps = {
 
 export function Royalty({ value, btnEnabled, onClick }: RoyaltyProps) {
 
-    const valueStr = value ? `${value}%` : 'not available...';
+    const valueStr = value ? `${value}%` : 'not available';
     const color = value ?
         value > 0 ? 'green' : (value < 0 ? 'red' : 'black')
         : 'grey';
