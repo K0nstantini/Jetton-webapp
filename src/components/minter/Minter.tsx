@@ -79,7 +79,7 @@ export function MinterBox({ sender, refresh: outerRefresh, minterChange }: Minte
             if (!minterContract || !newAdminAddr || adminAddr == newAdminAddr) return;
             const addr = Address.parse(newAdminAddr);
             await minterContract.sendChangeAdmin(sender, addr);
-            await sleep(30000);
+            await sleep(20000);
             setInnerRefresh(!innerRefresh);
         }
         changeAdminAddr();
@@ -89,7 +89,7 @@ export function MinterBox({ sender, refresh: outerRefresh, minterChange }: Minte
         async function changeRoyalty() {
             if (!minterContract || !newRoyalty || royalty == newRoyalty) return;
             await minterContract.sendSetRoyalty(sender, newRoyalty);
-            await sleep(30000);
+            await sleep(20000);
             setInnerRefresh(!innerRefresh);
         }
         changeRoyalty();

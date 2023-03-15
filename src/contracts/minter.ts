@@ -25,15 +25,17 @@ export default class Minter implements Contract {
       .endCell();
 
     await provider.internal(via, {
-      value: "0.05",
+      value: "0.02",
       body: messageBody
     });
   }
 
   async sendSetRoyalty(provider: ContractProvider, via: Sender, percent: number) {
     const sign = percent > 0 ? 0 : 1;
-    const num_part = Math.abs(percent);
-    const denom_part = 100;
+    const splitted = splitNumber(percent);
+    if (!splitted) return;
+    const { num_part, denom_part } = splitted;
+
     const messageBody = beginCell()
       .storeUint(6, 32)
       .storeUint(0, 64)
@@ -45,7 +47,7 @@ export default class Minter implements Contract {
     await provider.internal(via, {
       value: "0.02",
       body: messageBody
-    });
+    })
   }
 
   async sendChangeAdmin(provider: ContractProvider, via: Sender, address: Address) {
@@ -86,9 +88,31 @@ export default class Minter implements Contract {
       cell: beginCell().storeAddress(address).endCell()
     } as TupleItemSlice;
     const { stack } = await provider.get("get_wallet_address", [param]);
-    console.log(stack);
     return stack.readAddress();
   }
 
 }
+
+function splitNumber(num: number) {
+  const positive = Math.abs(num);
+  const integerPart = Math.trunc(positive);
+  if (positive == integerPart) {
+    return {
+      num_part: integerPart,
+      denom_part: 100
+    }
+  }
+
+  const str = String(positive);
+  var splitted = str.split(`.`, 2);
+  if (splitted.length != 2) return;
+  const fracPart = splitted[1];
+  const num_part = Number(`${integerPart}${fracPart}`)
+  const denom_part = 100 * Math.pow(10, (fracPart.length));
+
+  return {
+    num_part,
+    denom_part
+  }
+};
 
