@@ -10,15 +10,17 @@ body {
   align-items: center;
 }
 
-.Connect {
+.ConnectBox {
   position: absolute;
-  top: 40px;
-  left: 0;
   padding-right: 100px;
+  top: 20px;
+  left: 0;
   width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: end;
+  flex-direction: row;
+  gap: 30px;
+  align-items: center;
+  justify-content: end;
 }
 
 
@@ -26,4 +28,10 @@ body {
   color: darkblue;
   text-shadow: 2px 2px 4px rgba(179, 147, 211, 0.2);
   padding-bottom: 50px;
+}
+
+.Refs {
+  display: flex;
+  flex-direction: row;
+  gap: 10px
 }

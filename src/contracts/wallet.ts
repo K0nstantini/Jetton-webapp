@@ -17,7 +17,7 @@ export default class Wallet implements Contract {
       .storeMaybeRef(null)
       .endCell();
     await provider.internal(via, {
-      value: "0.05",
+      value: "0.1",
       body: messageBody
     });
   }

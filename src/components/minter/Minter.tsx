@@ -2,23 +2,24 @@ import { useEffect, useState } from 'react';
 import { Address, OpenedContract, Sender } from 'ton-core';
 import Minter from '../../contracts/minter';
 import { useAsyncInitialize } from '../../hooks/useAsyncInitialize';
-import { useTonClient } from '../../hooks/useTonClient';
 import { ChangeAddress } from '../changeAddress/ChangeAddress';
-import { ModalNumber } from '../ModalNumber';
-import { ModalText } from '../ModalText';
+import { ModalNumber } from '../modal/ModalNumber';
+import { ModalText } from '../modal/ModalAddress';
 import { Royalty } from '../royalty/Royalty';
 import { Supply } from '../supply/Supply';
 import classes from './Minter.module.css';
+import { REFRESH_TIMEOUT } from '../../Constants';
+import { TonClient } from 'ton';
 
 type MinterProps = {
     sender: Sender,
+    client: TonClient | null;
     refresh: boolean,
     minterChange: (minter: OpenedContract<Minter>) => void,
 }
 
-export function MinterBox({ sender, refresh: outerRefresh, minterChange }: MinterProps) {
+export function MinterBox({ sender, client, refresh: outerRefresh, minterChange }: MinterProps) {
 
-    const client = useTonClient();
     const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
     const [openMintAddr, setOpenMintAddr] = useState(false);
@@ -36,14 +37,14 @@ export function MinterBox({ sender, refresh: outerRefresh, minterChange }: Minte
 
     const [innerRefresh, setInnerRefresh] = useState(false);
 
-    const minterAddrChange = (addr: string) => {
+    const minterAddrChange = (addr: Address) => {
         setOpenMintAddr(false);
-        setMinterAddr(addr);
+        setMinterAddr(addr.toString());
     }
 
-    const adminAddrChange = (addr: string) => {
+    const adminAddrChange = (addr: Address) => {
         setOpenAdminAddr(false);
-        setNewAdminAddr(addr);
+        setNewAdminAddr(addr.toString());
     }
 
 
@@ -79,7 +80,7 @@ export function MinterBox({ sender, refresh: outerRefresh, minterChange }: Minte
             if (!minterContract || !newAdminAddr || adminAddr == newAdminAddr) return;
             const addr = Address.parse(newAdminAddr);
             await minterContract.sendChangeAdmin(sender, addr);
-            await sleep(20000);
+            await sleep(REFRESH_TIMEOUT);
             setInnerRefresh(!innerRefresh);
         }
         changeAdminAddr();
@@ -89,7 +90,7 @@ export function MinterBox({ sender, refresh: outerRefresh, minterChange }: Minte
         async function changeRoyalty() {
             if (!minterContract || !newRoyalty || royalty == newRoyalty) return;
             await minterContract.sendSetRoyalty(sender, newRoyalty);
-            await sleep(20000);
+            await sleep(REFRESH_TIMEOUT);
             setInnerRefresh(!innerRefresh);
         }
         changeRoyalty();

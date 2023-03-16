@@ -1,67 +1,89 @@
 import { Button, TextField } from '@mui/material'
-import { useEffect, useState } from 'react';
+import { useTonAddress } from '@tonconnect/ui-react';
+import { useState } from 'react';
+import { TonClient } from 'ton';
 import { Address, OpenedContract, Sender } from 'ton-core';
+import { REFRESH_TIMEOUT } from '../../Constants';
 import Minter from '../../contracts/minter';
 import Wallet from '../../contracts/wallet';
-import { useAsyncInitialize } from '../../hooks/useAsyncInitialize';
-import { useTonClient } from '../../hooks/useTonClient';
+import { MyAlert } from '../MyAlert';
 import classes from './JettonActions.module.css';
 
 type JettonActionsProps = {
     sender: Sender,
+    client: TonClient | null;
     minter: OpenedContract<Minter> | null,
     refresh: () => void,
 }
 
-export function JettonAction({ sender, minter, refresh }: JettonActionsProps) {
+export function JettonAction({ sender, client, minter, refresh }: JettonActionsProps) {
 
-    const client = useTonClient();
+    const ownerAddr = useTonAddress();
+
     const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
     const disabled = minter && sender ? false : true;
-    const [addr, setAddr] = useState('');
-    const [size, setSize] = useState(0);
-    const [walletAddr, setWalletAddr] = useState<Address>();
+    const [openAlert, setOpenAlert] = useState({ open: false, message: '' });
 
-    useEffect(() => {
-        try {
-            setWalletAddr(Address.parse(addr))
-        } catch { }
-    }, [addr]);
+    const [destinationAddr, setDestinationAddr] = useState('');
+    const [size, setSize] = useState(0);
+
+    enum Actions { Mint, Send, Burn };
 
     const changeSize = (event: { target: { value: any; }; }) => {
         const positiveSize = Math.abs(Number(event.target.value));
         setSize(positiveSize);
     }
 
-    async function action(fn: (sender: Sender, addr: Address, size: number) => void) {
-        if (!sender || !walletAddr || size <= 0) return;
-        fn(sender, walletAddr, size);
-        await sleep(30000);
+    async function action(act: Actions) {
+
+        let walletAddr: Address | null = null;
+        try {
+            walletAddr = Address.parse(destinationAddr);
+        } catch { }
+
+        if (!walletAddr) {
+            setOpenAlert({ open: true, message: 'Address is not valid' });
+            return;
+        }
+
+        if (size <= 0) {
+            setOpenAlert({ open: true, message: 'The size should be greater than 0' });
+            return;
+        }
+
+        if (act == Actions.Mint) {
+            if (!minter) return;
+            minter.sendMint(sender, walletAddr, size);
+        }
+
+        if (act == Actions.Send || act == Actions.Burn) {
+
+            const jettonWallet = await getJettonWallet(Address.parse(ownerAddr));
+
+            if (!jettonWallet) {
+                setOpenAlert({ open: true, message: 'Error while getting the contract jetton wallet' });
+                return;
+            }
+
+            if (act == Actions.Send) {
+                jettonWallet.sendJettons(sender, walletAddr, size);
+            }
+            if (act == Actions.Burn) {
+                jettonWallet.sendBurn(sender, walletAddr, size);
+            }
+        }
+
+        await sleep(REFRESH_TIMEOUT);
         refresh();
     }
 
-    async function mint() {
-        if (!minter) return;
-        await action(minter.sendMint);
-    }
-
-    async function burn() {
-        if (!jettonWallet) return;
-        await action(jettonWallet.sendBurn);
-    }
-
-    async function send() {
-        if (!jettonWallet) return;
-        await action(jettonWallet.sendJettons);
-    }
-
-    const jettonWallet = useAsyncInitialize(async () => {
-        if (!(client && minter && walletAddr)) return;
-        const jettonAddr = await minter.getWalletAddress(walletAddr);
+    async function getJettonWallet(address: Address) {
+        if (!(client && minter)) return;
+        const jettonAddr = await minter.getWalletAddress(address);
         const contract = new Wallet(jettonAddr);
         return client.open(contract) as OpenedContract<Wallet>;
-    }, [walletAddr])
+    }
 
     return (
         <div className={classes.actions}>
@@ -70,8 +92,8 @@ export function JettonAction({ sender, minter, refresh }: JettonActionsProps) {
                     className={classes.addr}
                     label="Address"
                     variant="outlined"
-                    value={addr}
-                    onChange={event => setAddr(event?.target.value)}
+                    value={destinationAddr}
+                    onChange={event => setDestinationAddr(event?.target.value)}
                 />
                 <TextField
                     className={classes.size}
@@ -88,24 +110,29 @@ export function JettonAction({ sender, minter, refresh }: JettonActionsProps) {
                     sx={{ backgroundColor: 'red' }}
                     disabled={disabled}
                     variant="contained"
-                    onClick={() => burn()}>
+                    onClick={() => action(Actions.Burn)}>
                     burn
                 </Button>
                 <Button
                     sx={{ backgroundColor: 'green' }}
                     disabled={disabled}
                     variant="contained"
-                    onClick={() => mint()}>
+                    onClick={() => action(Actions.Mint)}>
                     mint
                 </Button>
                 <Button
                     sx={{ backgroundColor: '#B88251' }}
                     disabled={disabled}
                     variant="contained"
-                    onClick={() => send()}>
+                    onClick={() => action(Actions.Send)}>
                     send
                 </Button>
             </div>
+
+            <MyAlert
+                open={openAlert.open}
+                message={openAlert.message}
+                handleClose={() => setOpenAlert({ open: false, message: '' })} />
         </div >
 
     )

@@ -1,22 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Address, OpenedContract, Sender } from 'ton-core';
+import { TonClient } from 'ton';
+import { Address, OpenedContract } from 'ton-core';
 import Minter from '../../contracts/minter';
 import Wallet from '../../contracts/wallet';
-import { useTonClient } from '../../hooks/useTonClient';
 import { ChangeAddress } from '../changeAddress/ChangeAddress';
-import { ModalText } from '../ModalText';
+import { ModalText } from '../modal/ModalAddress';
 import { Supply } from '../supply/Supply';
 import classes from './Wallet.module.css';
 
 type WalletProps = {
-    sender: Sender,
+    client: TonClient | null;
     minter: OpenedContract<Minter> | null,
     refresh: boolean
 }
 
-export function WalletBox({ sender, minter, refresh }: WalletProps) {
-
-    const client = useTonClient();
+export function WalletBox({ client, minter, refresh }: WalletProps) {
 
     const [ownerAddr, setOwnerAddr] = useState<Address | null>();
     const [jettonAddr, setJettonAddr] = useState<Address | null>();
@@ -27,18 +25,14 @@ export function WalletBox({ sender, minter, refresh }: WalletProps) {
     const [openOwnerAddr, setOpenOwnerAddr] = useState(false);
     const [openJettonAddr, setOpenJettonAddr] = useState(false);
 
-    const ownerAddrChange = (addr: string) => {
+    const ownerAddrChange = (addr: Address) => {
         setOpenOwnerAddr(false);
-        try {
-            setOwnerAddr(Address.parse(addr));
-        } catch { }
+        setOwnerAddr(addr);
     }
 
-    const ownerJettonChange = (addr: string) => {
+    const ownerJettonChange = (addr: Address) => {
         setOpenJettonAddr(false);
-        try {
-            setJettonAddr(Address.parse(addr));
-        } catch { }
+        setJettonAddr(addr);
     }
 
     useEffect(() => {
