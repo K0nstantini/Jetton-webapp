@@ -50,13 +50,9 @@ export function WalletBox({ client, minter, refresh: outerRefresh }: WalletProps
         async function getData() {
             if (!jettonWallet) return;
             setJettons(null);
-            try {
-                const { jettonAmount, address } = await jettonWallet.getData();
-                setJettons(jettonAmount);
-                if (ownerAddr?.toString() != address.toString()) setOwnerAddr(address);
-            } catch {
-                setOwnerAddr(null);
-            }
+            const { jettonAmount, address } = await jettonWallet.getData();
+            setJettons(jettonAmount);
+            if (ownerAddr?.toString() != address.toString()) setOwnerAddr(address);
         }
         getData();
     }, [jettonWallet, outerRefresh, innerRefresh]);
@@ -91,7 +87,7 @@ export function WalletBox({ client, minter, refresh: outerRefresh }: WalletProps
 
             <Supply
                 label='Jettons:'
-                value={jettons ? jettons : null} />
+                value={jettons == null ? null : jettons} />
 
             <div className={classes.refreshBox}>
                 <IconButton onClick={() => setInnerRefresh(!innerRefresh)}>
@@ -103,7 +99,6 @@ export function WalletBox({ client, minter, refresh: outerRefresh }: WalletProps
                 open={openOwnerAddr}
                 handleClose={() => setOpenOwnerAddr(false)}
                 onClickBtn={ownerAddrChange} />
-
             <ModalText
                 open={openJettonAddr}
                 handleClose={() => setOpenJettonAddr(false)}

@@ -9,10 +9,9 @@ type RoyaltyProps = {
 
 export function Royalty({ value, btnEnabled, onClick }: RoyaltyProps) {
 
-    const valueStr = value ? `${value}%` : 'not available';
-    const color = value ?
-        value > 0 ? 'green' : (value < 0 ? 'red' : 'black')
-        : 'grey';
+    const valueStr = value == null ? 'not available' : `${value}%`;
+    const color = value == null ? 'grey'
+        : (value > 0 ? 'green' : (value < 0 ? 'red' : 'black'));
 
     return (
         <div className={classes.royalty} >
@@ -20,10 +19,11 @@ export function Royalty({ value, btnEnabled, onClick }: RoyaltyProps) {
                 <h3 className={classes.staticTxt}>Comission:</h3>
                 <h3 style={{ color }}> {valueStr}</h3>
             </div>
+
             <Button
                 className={classes.btn}
                 disabled={!btnEnabled}
-                variant="contained"
+                variant="outlined"
                 onClick={onClick}>
                 change
             </Button>

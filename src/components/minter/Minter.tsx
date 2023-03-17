@@ -90,7 +90,7 @@ export function MinterBox({ sender, client, refresh: outerRefresh, minterChange 
 
     useEffect(() => {
         async function changeRoyalty() {
-            if (!minterContract || !newRoyalty || royalty == newRoyalty) return;
+            if (!minterContract || newRoyalty == null || royalty == newRoyalty) return;
             await minterContract.sendSetRoyalty(sender, newRoyalty);
             await sleep(REFRESH_TIMEOUT);
             setInnerRefresh(!innerRefresh);
@@ -114,13 +114,13 @@ export function MinterBox({ sender, client, refresh: outerRefresh, minterChange 
                 onClick={() => setOpenAdminAddr(true)} />
 
             <Royalty
-                value={royalty ? royalty : null}
+                value={royalty == null ? null : royalty}
                 btnEnabled={minterContract ? true : false}
                 onClick={() => setOpenRoyalty(true)} />
 
             <Supply
                 label='Supply:'
-                value={supply ? supply : null} />
+                value={supply == null ? null : supply} />
 
             <div className={classes.refreshBox}>
                 <IconButton onClick={() => setInnerRefresh(!innerRefresh)}>
@@ -131,20 +131,15 @@ export function MinterBox({ sender, client, refresh: outerRefresh, minterChange 
             <ModalText
                 open={openMintAddr}
                 handleClose={() => setOpenMintAddr(false)}
-                onClickBtn={minterAddrChange}
-            />
-
+                onClickBtn={minterAddrChange} />
             <ModalText
                 open={openAdminAddr}
                 handleClose={() => setOpenAdminAddr(false)}
-                onClickBtn={adminAddrChange}
-            />
-
+                onClickBtn={adminAddrChange} />
             <ModalNumber
                 open={openRoyalty}
                 handleClose={() => setOpenRoyalty(false)}
-                onClickBtn={royaltyChange}
-            />
+                onClickBtn={royaltyChange} />
         </div>
     )
 }

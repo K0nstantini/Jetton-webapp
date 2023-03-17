@@ -17,12 +17,12 @@ export function ChangeAddress({ value, label, btnEnabled, onClick }: ChangeAddre
                 variant="outlined"
                 label={label}
                 inputProps={{ readOnly: true }}
-                value={value}
-            />
+                value={value} />
+
             <Button
                 className={classes.btn}
                 disabled={!btnEnabled}
-                variant="contained"
+                variant="outlined"
                 onClick={onClick}>
                 change
             </Button>

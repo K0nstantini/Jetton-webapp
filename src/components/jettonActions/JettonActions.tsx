@@ -18,17 +18,16 @@ type JettonActionsProps = {
 
 export function JettonAction({ sender, client, minter, refresh }: JettonActionsProps) {
 
-    const ownerAddr = useTonAddress();
-
+    enum Actions { Mint, Send, Burn };
     const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
+
+    const ownerAddr = useTonAddress();
 
     const disabled = minter && sender ? false : true;
     const [openAlert, setOpenAlert] = useState({ open: false, message: '' });
 
     const [destinationAddr, setDestinationAddr] = useState('');
     const [size, setSize] = useState(0);
-
-    enum Actions { Mint, Send, Burn };
 
     const changeSize = (event: { target: { value: any; }; }) => {
         const positiveSize = Math.abs(Number(event.target.value));
@@ -93,35 +92,33 @@ export function JettonAction({ sender, client, minter, refresh }: JettonActionsP
                     label="Address"
                     variant="outlined"
                     value={destinationAddr}
-                    onChange={event => setDestinationAddr(event?.target.value)}
-                />
+                    onChange={event => setDestinationAddr(event?.target.value)} />
                 <TextField
                     className={classes.size}
                     type={'number'}
                     label="Size"
                     variant="outlined"
                     value={size}
-                    onChange={changeSize}
-                />
+                    onChange={changeSize} />
             </div>
 
             <div className={classes.btns}>
                 <Button
-                    sx={{ backgroundColor: 'red' }}
+                    sx={{ backgroundColor: 'indianred' }}
                     disabled={disabled}
                     variant="contained"
                     onClick={() => action(Actions.Burn)}>
                     burn
                 </Button>
                 <Button
-                    sx={{ backgroundColor: 'green' }}
+                    sx={{ backgroundColor: 'seagreen' }}
                     disabled={disabled}
                     variant="contained"
                     onClick={() => action(Actions.Mint)}>
                     mint
                 </Button>
                 <Button
-                    sx={{ backgroundColor: '#B88251' }}
+                    sx={{ backgroundColor: 'steelblue' }}
                     disabled={disabled}
                     variant="contained"
                     onClick={() => action(Actions.Send)}>

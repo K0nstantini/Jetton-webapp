@@ -15,7 +15,7 @@ export function MyAlert({ open, message, handleClose }: AlertProps) {
             onClose={handleClose}>
             <Alert
                 onClose={handleClose}
-                severity="warning"
+                severity="error"
                 sx={{ width: '100%' }}>
                 {message}
             </Alert>

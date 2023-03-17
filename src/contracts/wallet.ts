@@ -24,13 +24,13 @@ export default class Wallet implements Contract {
 
   async sendBurn(provider: ContractProvider, via: Sender, response: Address, amount: number) {
     const messageBody = beginCell()
-      .storeUint(0xf8a7ea5, 32)
+      .storeUint(0x595f07bc, 32)
       .storeUint(0, 64)
       .storeCoins(amount)
       .storeAddress(response)
       .endCell();
     await provider.internal(via, {
-      value: "0.05",
+      value: "0.03",
       body: messageBody
     });
   }

@@ -16,9 +16,8 @@ export function ModalNumber({ open, handleClose, onClickBtn }: ModalProps) {
     return (
         <Modal
             open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description" >
+            onClose={handleClose} >
+
             <Box sx={style}>
                 <div className={classes.box}>
                     <TextField
@@ -27,8 +26,8 @@ export function ModalNumber({ open, handleClose, onClickBtn }: ModalProps) {
                         variant="outlined"
                         fullWidth={true}
                         value={size}
-                        onChange={event => setSize(Number(event.target.value))}
-                    />
+                        onChange={event => setSize(Number(event.target.value))} />
+
                     <Button
                         variant="contained"
                         onClick={() => onClickBtn(size)}>

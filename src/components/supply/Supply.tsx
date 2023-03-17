@@ -8,8 +8,8 @@ type SupplyProps = {
 
 export function Supply({ label, value }: SupplyProps) {
 
-    const valueStr = value ? `${value}` : 'not available';
-    const color = value ? 'black' : 'grey';
+    const valueStr = value == null ? 'not available' : `${value}`;
+    const color = value == null ? 'grey' : 'black';
 
     return (
         <div className={classes.supply}>

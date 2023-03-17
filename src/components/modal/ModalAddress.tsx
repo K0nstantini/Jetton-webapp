@@ -30,9 +30,7 @@ export function ModalText({ open, handleClose, onClickBtn }: ModalProps) {
         <div>
             <Modal
                 open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description" >
+                onClose={handleClose} >
 
                 <Box sx={style}>
                     <div className={classes.box}>
@@ -41,8 +39,8 @@ export function ModalText({ open, handleClose, onClickBtn }: ModalProps) {
                             variant="outlined"
                             fullWidth={true}
                             value={value}
-                            onChange={event => setValue(event.target.value)}
-                        />
+                            onChange={event => setValue(event.target.value)} />
+
                         <Button
                             variant="contained"
                             onClick={onClick}>
