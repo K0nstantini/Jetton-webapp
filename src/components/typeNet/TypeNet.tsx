@@ -1,6 +1,5 @@
-import { FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { useState } from 'react';
-import classes from './TypeNet.module.css';
 
 export enum TypesNet {
     Testnet = "Testnet",
@@ -22,13 +21,14 @@ export function TypeNet({ handleChange }: TypeNetProps) {
 
     return (
         <FormControl
-            // className={classes.select}
             sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel id="label"><b>Network</b></InputLabel>
             <Select
+                labelId='label'
+                label='Network'
                 value={type}
                 onChange={change}
-                displayEmpty
-                inputProps={{ 'aria-label': 'Without label' }} >
+                displayEmpty >
                 <MenuItem value={TypesNet.Testnet}>{TypesNet.Testnet}</MenuItem>
                 <MenuItem value={TypesNet.Mainnet}>{TypesNet.Mainnet}</MenuItem>
             </Select>

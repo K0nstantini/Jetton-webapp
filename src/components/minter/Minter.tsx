@@ -10,6 +10,8 @@ import { Supply } from '../supply/Supply';
 import classes from './Minter.module.css';
 import { REFRESH_TIMEOUT } from '../../Constants';
 import { TonClient } from 'ton';
+import { IconButton } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 type MinterProps = {
     sender: Sender,
@@ -119,6 +121,12 @@ export function MinterBox({ sender, client, refresh: outerRefresh, minterChange 
             <Supply
                 label='Supply:'
                 value={supply ? supply : null} />
+
+            <div className={classes.refreshBox}>
+                <IconButton onClick={() => setInnerRefresh(!innerRefresh)}>
+                    <RefreshIcon className={classes.refreshIcon} />
+                </IconButton>
+            </div>
 
             <ModalText
                 open={openMintAddr}

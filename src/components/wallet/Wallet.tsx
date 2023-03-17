@@ -1,3 +1,4 @@
+import { IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { TonClient } from 'ton';
 import { Address, OpenedContract } from 'ton-core';
@@ -7,6 +8,7 @@ import { ChangeAddress } from '../changeAddress/ChangeAddress';
 import { ModalText } from '../modal/ModalAddress';
 import { Supply } from '../supply/Supply';
 import classes from './Wallet.module.css';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 type WalletProps = {
     client: TonClient | null;
@@ -14,7 +16,7 @@ type WalletProps = {
     refresh: boolean
 }
 
-export function WalletBox({ client, minter, refresh }: WalletProps) {
+export function WalletBox({ client, minter, refresh: outerRefresh }: WalletProps) {
 
     const [ownerAddr, setOwnerAddr] = useState<Address | null>();
     const [jettonAddr, setJettonAddr] = useState<Address | null>();
@@ -24,6 +26,8 @@ export function WalletBox({ client, minter, refresh }: WalletProps) {
 
     const [openOwnerAddr, setOpenOwnerAddr] = useState(false);
     const [openJettonAddr, setOpenJettonAddr] = useState(false);
+
+    const [innerRefresh, setInnerRefresh] = useState(false);
 
     const ownerAddrChange = (addr: Address) => {
         setOpenOwnerAddr(false);
@@ -55,7 +59,7 @@ export function WalletBox({ client, minter, refresh }: WalletProps) {
             }
         }
         getData();
-    }, [jettonWallet, refresh]);
+    }, [jettonWallet, outerRefresh, innerRefresh]);
 
     useEffect(() => {
         async function getJettonAddr() {
@@ -88,6 +92,12 @@ export function WalletBox({ client, minter, refresh }: WalletProps) {
             <Supply
                 label='Jettons:'
                 value={jettons ? jettons : null} />
+
+            <div className={classes.refreshBox}>
+                <IconButton onClick={() => setInnerRefresh(!innerRefresh)}>
+                    <RefreshIcon className={classes.refreshIcon} />
+                </IconButton>
+            </div>
 
             <ModalText
                 open={openOwnerAddr}
