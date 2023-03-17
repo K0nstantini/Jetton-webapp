@@ -25,7 +25,7 @@ export default class Minter implements Contract {
       .endCell();
 
     await provider.internal(via, {
-      value: "0.15",
+      value: "0.22",
       body: messageBody
     });
   }
