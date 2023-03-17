@@ -25,13 +25,13 @@ export default class Minter implements Contract {
       .endCell();
 
     await provider.internal(via, {
-      value: "0.05",
+      value: "0.15",
       body: messageBody
     });
   }
 
   async sendSetRoyalty(provider: ContractProvider, via: Sender, percent: number) {
-    const sign = percent > 0 ? 0 : 1;
+    const sign = percent >= 0 ? 0 : 1;
     const splitted = splitNumber(percent);
     if (!splitted) return;
     const { num_part, denom_part } = splitted;
